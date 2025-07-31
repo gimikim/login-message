@@ -3,7 +3,8 @@ from tkinter import messagebox
 
 # ---------------- 파일 기반 사용자 처리 함수 ----------------
 
-def sign_up():  # 버튼 눌렀을 때의 동작 로직을 위에 쓰고, 창, 버튼은 아래에 씀. (단, 오류 메시지 등은 showerror로 위에 바로 적는다.)
+def sign_up():  # "회원가입" 버튼을 눌렀을 때 호출됨 -> 창을 띄우고 버튼과 입력창을 생성함. 
+# '가입하기 창'에서 버튼 눌렀을 때의 동작 로직을 위에 쓰고, 창, 버튼은 아래에 씀. (단, 오류 메시지 등은 showerror로 위에 바로 적는다.)
     try:
         with open('users.txt','r',encoding="UTF-8") as f:
             file = f.read()
@@ -12,7 +13,7 @@ def sign_up():  # 버튼 눌렀을 때의 동작 로직을 위에 쓰고, 창, �
             pass
         file = ""
 
-    def submit_signup():    # submit_signup이 왜 따로 또 있는 거지? 
+    def submit_signup():    # "가입하기" 버튼을 눌렀을 때 호출됨 -> 입력값을 검사하고 파일에 저장함.
         nickname = entry_nickname.get()
         user_id = entry_id.get()
         password = entry_password.get()
@@ -75,7 +76,7 @@ def sign_in():
                     return
         messagebox.showerror("오류", "ID가 존재하지 않습니다.")
 
-    login_window = tk.Toplevel()
+    login_window = tk.Toplevel()    # Tk는 한 번만 여는 창. Toplevel은 보조 창.
     login_window.title("로그인")
 
     tk.Label(login_window, text="ID").grid(row=0, column=0)
