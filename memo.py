@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox as mbox
-
+# ---------------- gui version ---------------
 def send_message():
     from datetime import datetime
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -12,38 +12,40 @@ def send_message():
         # 입력창 내용을 가져온다.(수신자, 메세지 내용)
         receiver_id = receiver_entry.get()
         
-        for j in range(1, len(lines), 4):   
+        for j in range(1, len(lines), 4):   # len(lines)+1 해야 하는 거 아닌가?
             if receiver_id == lines[j]:
                 break
             else:
                 mbox.showerror("오류", "존재하지 않는 ID입니다.")
                 
+        content = text.get("1.0", "end-1c") # 1.0: 첫 행 0번째 문자. 1c: 문자 한 개. 안빼면 다음 줄까지 포함됨.
+        
         # 작성하기
-        # with open(f'messages_{receiver_id}.txt', 'a',encoding="UTF-8") as f:     # 'w': 없으면 만들고, 기존 내용에 덮어씀. 'a': 추가 모드, 기존 내용 뒤에 이어씀.
-            # f.writelines(f"[{now}] {my_id}: {text_entry}\n") 
+        with open(f'messages_{receiver_id}.txt', 'a',encoding="UTF-8") as f:     # 'w': 없으면 만들고, 기존 내용에 덮어씀. 'a': 추가 모드, 기존 내용 뒤에 이어씀.
+            f.writelines(f"[{now}] {my_id}: {content}\n") 
     
-        pass
+        
         
     send_message_window = tk.Toplevel()
     send_message_window.title("메세지 보내기")
     
     tk.Label(send_message_window, text="메세지 전송하기")   # 메세지 전송하기(label)
-    receiver_label = tk.Label(send_message_window)  # 라벨
-    text_label = tk.Label(send_message_window)
+    receiver_label = tk.Label(send_message_window)  # 수신자 라벨
+    text_label = tk.Label(send_message_window)      # 메시지 라벨
     
     # 라벨 배치
     receiver_label.grid(row=0, column=0)
     text_label.grid(row=1, column=0)
     
     receiver_entry = tk.Entry(send_message_window).grid(row=0, column=1)  # 수신자 입력창(entry)
-    text_entry = tk.Entry(send_message_window).grid(row=1, column=1)  # 메세지 입력창(entry)
+    text = tk.Text(send_message_window, width=40, height=10).grid(row=1, column=1)  # 메세지 입력창(entry)
     
-    send_btn = tk.Button(send_message_window, text="전송", command=submit_send).grid(row=2, column=0, columnspan=2) # "전송" 버튼
-    
-    pass
+    tk.Button(send_message_window, text="전송", command=submit_send).grid(row=2, column=0, columnspan=2) # "전송" 버튼
     
     
-
+    
+    
+# no gui
 def send_message(my_id):  
     from datetime import datetime   # import 모듈: 모듈 전체를 가져오는 것, from 모듈 import 이름: 모듈 내에서 필요한 것만 가져온다.
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 메세지 보내기 안에 넣지 않으면, 로그아웃을 했다가 다시 들어오기 전까지 고정된 시간을 이용.

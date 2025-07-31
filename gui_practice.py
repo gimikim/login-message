@@ -73,12 +73,16 @@ def open_mainmenu2(user_id):
             else:
                 mbox.showerror("오류", "존재하지 않는 ID입니다.")   # ❗break 다음에 성공인데도 오류 메시지가 뜨게 됨. 
                 return  # return 쓰는 게 맞을까?
-                
+            
+            content = text.get("1.0", "end-1c") # 1.0: 첫 행 0번째 문자. 1c: 문자 한 개. 안빼면 다음 줄까지 포함됨.
+            
             # 작성하기
             with open(f'messages_{receiver_id}.txt', 'a',encoding="UTF-8") as f:     # 'w': 없으면 만들고, 기존 내용에 덮어씀. 'a': 추가 모드, 기존 내용 뒤에 이어씀.
-                f.writelines(f"[{now}] {user_id}: {text_entry}\n") 
+                f.writelines(f"[{now}] {user_id}: {content}\n") 
         
             mbox.showinfo("알림", f"{receiver_id}에게 메세지가 전송되었습니다.")
+            
+            send_message_window.destroy()
             
         send_message_window = tk.Toplevel()
         send_message_window.title("메세지 보내기")
@@ -95,12 +99,12 @@ def open_mainmenu2(user_id):
         receiver_entry = tk.Entry(send_message_window)
         receiver_entry.grid(row=0, column=1)  # 수신자 입력창(entry)
         
-        text_entry = tk.Entry(send_message_window)  # 메세지 입력창(entry)
-        text_entry.grid(row=1, column=1)
+        text = tk.Text(send_message_window, width=40, height=10)    # 메세지 입력창(entry)
+        text.grid(row=1, column=1)  # grid는 (get에서) none을 반환하므로 위젯은 별도로 변수에 저장하고, gird는 다음줄에 호출.
         
         tk.Button(send_message_window, text="전송", command=submit_send).grid(row=2, column=0, columnspan=2) # "전송" 버튼
         
-        pass
+        
     
     def check_message():
         print()
@@ -148,7 +152,7 @@ def sign_in():  # 로그인
                 if user_password == password:
                     mbox.showinfo("성공", "로그인이 완료되었습니다.")    
                     signin_window.destroy()
-                    open_mainmenu2(user_id)
+                    open_mainmenu2(user_id)     # 메인메뉴2로 ID 전달
                     return  # destroy 있으면 끝 아닌가? 왜 return이 굳이 필요하지? -> destroy는 GUI 창만 닫지만, submit_signup 함수는 계속 실행됨. 문제는 아래에 "아이디 없음" 메시지가 뜨게 됨.
                 else:
                     mbox.showerror("오류", "비밀번호가 틀렸습니다.")
